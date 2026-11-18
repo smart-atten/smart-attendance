@@ -1,0 +1,22 @@
+smart-attendance/
+│
+├── 📄 index.html                (브라우저가 처음 열고, main.jsx를 실행)
+├── 📄 postcss.config.js         (CSS 처리 과정에서 Tailwind 실행)
+├── 📄 tailwind.config.js        (Tailwind가 클래스 이름을 찾을 파일 범위 지정)
+│
+└── 📂 src
+    ├── 📄 main.jsx              (index.css를 불러오고 App을 띄움)
+    ├── 📄 index.css              (Tailwind 스타일을 넣는 공통 진입점)
+    ├── 📄 App.jsx                (공통 레이아웃과 주소별 화면 연결)
+    ├── 📄 App.css                (Vite 예제 스타일, 현재 App.jsx에서 불러오지 않음)
+    │
+    ├── 📂 components
+    │   └── 📄 Navbar.jsx         (공통 메뉴)
+    │
+    └── 📂 pages
+        ├── 📄 Home.jsx           (/)
+        ├── 📄 Timetable.jsx      (/timetable)
+        ├── 📄 QnA.jsx            (/qna)
+        ├── 📄 Notice.jsx         (/notice)
+        ├── 📄 Settings.jsx       (/settings)
+        └── 📄 More.jsx           (/more)
