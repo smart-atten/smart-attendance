@@ -43,9 +43,8 @@
 ## 🏗 시스템 구조
 
 ```text
-React 화면 → Spring Boot REST API → MySQL
-                          ↑
-          강좌 목록 + 가상 학생·수강 데이터
+목표: React 화면 → API 요청 → 컨트롤러 → 서비스 → DB 접근 → MySQL
+현재: 개발용 시간표만 화면과 DB 조회가 연결됨
 ```
 
 강좌 목록 엑셀의 원본 2,903건은 `course_catalog_import`에 보관하고, 학생과 수강 정보는 별도로 만든 가상 데이터를 사용합니다. 학기·교시 시각이 확정되기 전까지 원본 목록을 실제 시간표로 자동 변환하지 않습니다.
@@ -53,24 +52,104 @@ React 화면 → Spring Boot REST API → MySQL
 ## 📁 폴더 구조
 
 ```text
-smart-attendance/
-├── src/                          React 애플리케이션
-│   ├── api/                      공통 API 요청 함수
-│   ├── components/               공통 메뉴 등 UI
-│   ├── domain/                   출결·강좌·게시글·사용자 공통 정의
-│   ├── pages/                    담당 영역별 화면
-│   ├── App.jsx                   공통 레이아웃과 라우팅
-│   └── main.jsx                  프런트엔드 진입점
-├── public/                       정적 파일
-├── backend/                      Spring Boot 서버
-│   ├── pom.xml                   서버 빌드와 의존성
-│   └── src/main/
-│       ├── java/kr/ac/bu/attendance/  API와 서버 진입점
-│       └── resources/            DB 설정, 스키마, 가상 데이터
-├── docs/                         개발 환경 및 API 안내
-├── compose.yaml                  로컬 MySQL 설정
-├── .env.example                  로컬 DB 환경 변수 예시
-└── package.json                  프런트엔드 스크립트와 의존성
+📁 smart-attendance/
+├── 📁 backend/ — 백엔드
+│   ├── 📁 src/
+│   │   ├── 📁 main/
+│   │   │   ├── 📁 java/
+│   │   │   │   └── 📁 kr/
+│   │   │   │       └── 📁 ac/
+│   │   │   │           └── 📁 bu/
+│   │   │   │               └── 📁 attendance/
+│   │   │   │                   ├── 📁 auth/ — 로그인 · 담당 미정
+│   │   │   │                   │   ├── 📄 AuthController.java
+│   │   │   │                   │   ├── 📄 AuthService.java
+│   │   │   │                   │   ├── 📄 PasswordConfig.java
+│   │   │   │                   │   ├── 📄 PasswordService.java
+│   │   │   │                   │   └── 📄 UserCredentialsRepository.java
+│   │   │   │                   ├── 📄 ApiContracts.java
+│   │   │   │                   ├── 📄 ApiErrors.java
+│   │   │   │                   ├── 📄 AttendanceApplication.java
+│   │   │   │                   ├── 📄 DevelopmentTimetableController.java — 개발용 조회 · 이은아
+│   │   │   │                   ├── 📄 NotificationController.java — 알림 API · 박지연
+│   │   │   │                   ├── 📄 NotificationRepository.java — 알림 DB 접근 · 박지연
+│   │   │   │                   ├── 📄 NotificationService.java — 알림 서비스 · 박지연
+│   │   │   │                   ├── 📄 PendingFeature.java
+│   │   │   │                   ├── 📄 PostController.java — 게시판 API · 김건우/박지연
+│   │   │   │                   ├── 📄 PostRepository.java — 게시판 DB 접근 · 김건우/박지연
+│   │   │   │                   ├── 📄 PostService.java — 게시판 서비스 · 김건우/박지연
+│   │   │   │                   ├── 📄 StudentController.java — 학생·설정 API · 공통/박지연
+│   │   │   │                   ├── 📄 StudentDataRepository.java — 학생·수강·출결 DB 조회 · 공통/이은아
+│   │   │   │                   ├── 📄 StudentService.java — 학생·설정 서비스 · 공통/박지연
+│   │   │   │                   ├── 📄 TimetableController.java — 시간표·출결 API · 이은아
+│   │   │   │                   └── 📄 TimetableService.java — 시간표·출결 서비스 · 이은아
+│   │   │   └── 📁 resources/
+│   │   │       ├── 📄 application-dev.properties
+│   │   │       ├── 📄 application.properties
+│   │   │       ├── 📄 course_catalog.sql — 강좌 원본
+│   │   │       ├── 📄 demo-data.sql — 테스트 데이터
+│   │   │       └── 📄 schema.sql — DB 테이블 구조
+│   │   └── 📁 test/
+│   │       └── 📁 java/
+│   │           └── 📁 kr/
+│   │               └── 📁 ac/
+│   │                   └── 📁 bu/
+│   │                       └── 📁 attendance/
+│   │                           ├── 📁 auth/ — 로그인 · 담당 미정
+│   │                           │   └── 📄 PasswordServiceTest.java
+│   │                           └── 📄 DatabaseReadIntegrationTest.java
+│   ├── 📄 pom.xml
+│   └── 📄 README.md — 전체 소개·설치·구조
+├── 📁 docs/ — 개발 환경 안내
+│   └── 📄 DEVELOPMENT.md
+├── 📁 public/
+│   ├── 📄 favicon.svg
+│   └── 📄 icons.svg
+├── 📁 src/
+│   ├── 📁 api/
+│   │   └── 📄 apiClient.js — 공통 API 요청
+│   ├── 📁 assets/
+│   │   ├── 📄 hero.png
+│   │   ├── 📄 react.svg
+│   │   └── 📄 vite.svg
+│   ├── 📁 components/
+│   │   └── 📄 Navbar.jsx — 공통 메뉴 · 유다연
+│   ├── 📁 domain/
+│   │   ├── 📄 attendance.js
+│   │   ├── 📄 post.js
+│   │   ├── 📄 timetable.js
+│   │   ├── 📄 timetableMapper.js — 시간표 데이터 변환 · 이은아
+│   │   ├── 📄 timetableScale.js — 시간표 시간축 · 이은아
+│   │   └── 📄 user.js
+│   ├── 📁 pages/
+│   │   ├── 📄 Home.jsx — 홈 · 유다연
+│   │   ├── 📄 More.jsx — 더보기 · 박지연
+│   │   ├── 📄 Notice.jsx — 공지 · 박지연
+│   │   ├── 📄 QnA.jsx — Q&A·FAQ · 김건우
+│   │   ├── 📄 Settings.jsx — 설정 · 박지연
+│   │   ├── 📄 Timetable.jsx — 시간표 화면 · 이은아
+│   │   └── 📄 TimetablePage.jsx — 시간표 데이터 조회 · 이은아
+│   ├── 📄 App.css
+│   ├── 📄 App.jsx — 공통 화면 연결 · 유다연
+│   ├── 📄 index.css
+│   ├── 📄 main.jsx
+│   └── 📄 README.md — 전체 소개·설치·구조
+├── 📁 test/
+│   ├── 📄 timetableMapper.test.js
+│   └── 📄 timetableScale.test.js
+├── 📁 tools/
+│   └── 📄 export_course_catalog.py
+├── 📄 .env.example
+├── 📄 .gitignore
+├── 📄 .oxlintrc.json
+├── 📄 compose.yaml — MySQL 실행 설정
+├── 📄 index.html
+├── 📄 package-lock.json
+├── 📄 package.json — 프런트 의존성·명령
+├── 📄 postcss.config.js
+├── 📄 README.md — 전체 소개·설치·구조
+├── 📄 tailwind.config.js
+└── 📄 vite.config.js
 ```
 
 세부 구조는 [프런트엔드](src/README.md), [백엔드](backend/README.md), 실행 방법은 [개발 환경 안내](docs/DEVELOPMENT.md)를 확인하세요.

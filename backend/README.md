@@ -13,39 +13,53 @@ Spring Boot 서버와 MySQL을 사용합니다. 정식 API는 로그인·토큰 
 ## 서버 파일 트리
 
 ```text
-backend/
-  pom.xml
-  src/main/java/kr/ac/bu/attendance/
-    ApiContracts.java
-    ApiErrors.java
-    AttendanceApplication.java
-    auth/AuthController.java
-    auth/AuthService.java
-    auth/PasswordConfig.java
-    auth/PasswordService.java
-    auth/UserCredentialsRepository.java
-    DevelopmentTimetableController.java
-    NotificationController.java
-    NotificationRepository.java
-    NotificationService.java
-    PendingFeature.java
-    PostController.java
-    PostRepository.java
-    PostService.java
-    StudentController.java
-    StudentDataRepository.java
-    StudentService.java
-    TimetableController.java
-    TimetableService.java
-  src/main/resources/
-    application.properties
-    application-dev.properties
-    schema.sql
-    demo-data.sql
-    course_catalog.sql
-  src/test/java/kr/ac/bu/attendance/
-    DatabaseReadIntegrationTest.java
-    auth/PasswordServiceTest.java
+📁 backend/
+├── 📁 src/
+│   ├── 📁 main/
+│   │   ├── 📁 java/
+│   │   │   └── 📁 kr/
+│   │   │       └── 📁 ac/
+│   │   │           └── 📁 bu/
+│   │   │               └── 📁 attendance/
+│   │   │                   ├── 📁 auth/ — 로그인 · 담당 미정
+│   │   │                   │   ├── 📄 AuthController.java
+│   │   │                   │   ├── 📄 AuthService.java
+│   │   │                   │   ├── 📄 PasswordConfig.java
+│   │   │                   │   ├── 📄 PasswordService.java
+│   │   │                   │   └── 📄 UserCredentialsRepository.java
+│   │   │                   ├── 📄 ApiContracts.java
+│   │   │                   ├── 📄 ApiErrors.java
+│   │   │                   ├── 📄 AttendanceApplication.java
+│   │   │                   ├── 📄 DevelopmentTimetableController.java — 개발용 조회 · 이은아
+│   │   │                   ├── 📄 NotificationController.java — 알림 API · 박지연
+│   │   │                   ├── 📄 NotificationRepository.java — 알림 DB 접근 · 박지연
+│   │   │                   ├── 📄 NotificationService.java — 알림 서비스 · 박지연
+│   │   │                   ├── 📄 PendingFeature.java
+│   │   │                   ├── 📄 PostController.java — 게시판 API · 김건우/박지연
+│   │   │                   ├── 📄 PostRepository.java — 게시판 DB 접근 · 김건우/박지연
+│   │   │                   ├── 📄 PostService.java — 게시판 서비스 · 김건우/박지연
+│   │   │                   ├── 📄 StudentController.java — 학생·설정 API · 공통/박지연
+│   │   │                   ├── 📄 StudentDataRepository.java — 학생·수강·출결 DB 조회 · 공통/이은아
+│   │   │                   ├── 📄 StudentService.java — 학생·설정 서비스 · 공통/박지연
+│   │   │                   ├── 📄 TimetableController.java — 시간표·출결 API · 이은아
+│   │   │                   └── 📄 TimetableService.java — 시간표·출결 서비스 · 이은아
+│   │   └── 📁 resources/
+│   │       ├── 📄 application-dev.properties
+│   │       ├── 📄 application.properties
+│   │       ├── 📄 course_catalog.sql — 강좌 원본
+│   │       ├── 📄 demo-data.sql — 테스트 데이터
+│   │       └── 📄 schema.sql — DB 테이블 구조
+│   └── 📁 test/
+│       └── 📁 java/
+│           └── 📁 kr/
+│               └── 📁 ac/
+│                   └── 📁 bu/
+│                       └── 📁 attendance/
+│                           ├── 📁 auth/ — 로그인 · 담당 미정
+│                           │   └── 📄 PasswordServiceTest.java
+│                           └── 📄 DatabaseReadIntegrationTest.java
+├── 📄 pom.xml
+└── 📄 README.md — 전체 소개·설치·구조
 ```
 
 ## DB와 연결 상태
