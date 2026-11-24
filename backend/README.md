@@ -42,7 +42,8 @@ backend/
     application-dev.properties
     schema.sql
     demo-data.sql
-    course_catalog.sql
+    catalog/course_catalog_01.sql ~ course_catalog_04.sql
+    demo-timetable.sql
   src/test/java/kr/ac/bu/attendance/
     DatabaseReadIntegrationTest.java
     auth/PasswordServiceTest.java
@@ -50,6 +51,6 @@ backend/
 
 ## DB와 연결 상태
 
-`schema.sql`은 테이블 구조, `demo-data.sql`은 가상 계정과 수강, `course_catalog.sql`은 강좌 원본을 담습니다. Docker가 빈 볼륨을 최초 생성할 때 적용하며 기존 DB에는 다시 적용되지 않습니다.
+`schema.sql`은 테이블 구조, `demo-data.sql`은 가상 계정과 수강, `catalog/`의 SQL 파일은 강좌 원본, `demo-timetable.sql`은 예시 시간표를 담습니다. Docker가 빈 볼륨을 최초 생성할 때 적용하며 기존 DB에는 다시 적용되지 않습니다.
 
 개발 프로필의 학생·시간표·출결 조회만 동작합니다. 개발용 출결 조회는 `GET /api/dev/students/{studentNo}/attendance`이며 인증 없이 로컬 테스트 용도로만 사용합니다. 정식 API, 로그인과 토큰, 출결 저장 및 게시판 권한은 미구현입니다. 저장소 함수는 존재하지만 인증된 사용자와 서비스에 아직 연결되지 않았습니다. API 계약과 실행법은 [프로젝트 README](../README.md)를 참고하세요.
