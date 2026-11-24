@@ -13,7 +13,14 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api/dev/students")
 class DevelopmentTimetableController {
     private final JdbcTemplate db;
-    DevelopmentTimetableController(JdbcTemplate db) { this.db = db; }
+    private final TimetableService service;
+    DevelopmentTimetableController(JdbcTemplate db, TimetableService service) { this.db = db; this.service = service; }
+
+    @GetMapping("/{studentNo}/attendance")
+    List<Map<String, Object>> attendance(@PathVariable String studentNo,
+            @RequestParam(required = false) Long offeringId) {
+        return service.getDevelopmentAttendance(studentNo, offeringId);
+    }
 
     @GetMapping("/{studentNo}")
     Map<String, Object> student(@PathVariable String studentNo) {
