@@ -48,7 +48,7 @@ apply_file() {
 for i in 01 02 03 04; do
   apply_file "catalog_$i" "backend/src/main/resources/catalog/course_catalog_$i.sql"
 done
-apply_file 'demo_timetable_01' 'backend/src/main/resources/demo-timetable.sql'
+apply_file 'demo_timetable_02' 'backend/src/main/resources/demo-timetable.sql'
 
 shopt -s nullglob
 for file in backend/src/main/resources/db-updates/[0-9]*.sql; do

@@ -1,5 +1,34 @@
 SET NAMES utf8mb4;
 
+DROP PROCEDURE IF EXISTS attendance_apply_team_students_02;
+DELIMITER //
+CREATE PROCEDURE attendance_apply_team_students_02()
+BEGIN
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN ROLLBACK; RESIGNAL; END;
+  IF (SELECT COUNT(*) FROM users WHERE student_no IN ('DEMO001', '20232656') AND display_name = '이은아') <> 1
+     OR (SELECT COUNT(*) FROM users WHERE student_no IN ('DEMO002', '20221149') AND display_name = '김건우') <> 1
+     OR (SELECT COUNT(*) FROM users WHERE student_no IN ('DEMO003', '20222267') AND display_name = '유다연') <> 1
+     OR (SELECT COUNT(*) FROM users WHERE student_no IN ('DEMO004', '20221883') AND display_name = '박지연') <> 1
+     OR EXISTS (SELECT 1 FROM users WHERE student_no = '20232656' AND display_name <> '이은아')
+     OR EXISTS (SELECT 1 FROM users WHERE student_no = '20221149' AND display_name <> '김건우')
+     OR EXISTS (SELECT 1 FROM users WHERE student_no = '20222267' AND display_name <> '유다연')
+     OR EXISTS (SELECT 1 FROM users WHERE student_no = '20221883' AND display_name <> '박지연') THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Student data does not match; no student numbers were changed';
+  END IF;
+  START TRANSACTION;
+  UPDATE users SET student_no = CASE student_no
+    WHEN 'DEMO001' THEN '20232656'
+    WHEN 'DEMO002' THEN '20221149'
+    WHEN 'DEMO003' THEN '20222267'
+    WHEN 'DEMO004' THEN '20221883'
+    ELSE student_no END
+  WHERE student_no IN ('DEMO001','DEMO002','DEMO003','DEMO004');
+  COMMIT;
+END//
+DELIMITER ;
+CALL attendance_apply_team_students_02();
+DROP PROCEDURE attendance_apply_team_students_02;
+
 INSERT INTO courses (course_code, course_name)
 SELECT source.course_code, source.course_name
 FROM course_catalog_import source
@@ -28,8 +57,8 @@ SELECT u.user_id, o.offering_id
 FROM users u JOIN course_offerings o ON o.academic_year = 2026 AND o.term_code = '2' AND o.section_code = '01'
 JOIN courses c ON c.course_id = o.course_id
 WHERE u.role = 'STUDENT' AND (
-    (u.student_no = 'DEMO001' AND c.course_code IN ('03671','03674','09613')) OR
-    (u.student_no = 'DEMO002' AND c.course_code IN ('03674','09571','09942')) OR
-    (u.student_no = 'DEMO003' AND c.course_code IN ('03671','09571','09613')) OR
-    (u.student_no = 'DEMO004' AND c.course_code IN ('03671','03674','09571'))
+    (u.student_no = '20232656' AND c.course_code IN ('03671','03674','09613')) OR
+    (u.student_no = '20221149' AND c.course_code IN ('03674','09571','09942')) OR
+    (u.student_no = '20222267' AND c.course_code IN ('03671','09571','09613')) OR
+    (u.student_no = '20221883' AND c.course_code IN ('03671','03674','09571'))
 );
