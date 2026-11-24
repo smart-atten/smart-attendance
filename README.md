@@ -47,7 +47,9 @@
 현재: 개발용 시간표만 화면과 DB 조회가 연결됨
 ```
 
-강좌 목록 엑셀의 원본 2,903건은 `course_catalog_import`에 보관하고, 학생과 수강 정보는 별도로 만든 가상 데이터를 사용합니다. 학기·교시 시각이 확정되기 전까지 원본 목록을 실제 시간표로 자동 변환하지 않습니다.
+SQL은 `backend/src/main/resources/` 아래에 있으며, 강좌 목록은 GitHub에서 볼 수 있도록 `catalog/`에 나누어 저장합니다.
+
+강좌 목록 엑셀의 원본 2,903건은 `course_catalog_import`에 보관하고, 학생과 수강 정보는 별도로 만든 가상 데이터를 사용합니다. 학기·교시 시각은 임의의 테스트 값이며 실제 시간표가 아닙니다. 원본 강좌 중 일부를 가상 학생의 예시 시간표로 연결합니다.
 
 | 담당 | 화면에서 서버까지 확인할 경로 |
 |---|---|
@@ -55,7 +57,7 @@
 | 이은아 · 시간표·출결 | `src/pages/TimetablePage.jsx` → `src/api/apiClient.js` → `backend/src/main/java/kr/ac/bu/attendance/DevelopmentTimetableController.java` → MySQL. 정식 API는 `TimetableController.java` → `TimetableService.java` → `StudentDataRepository.java`를 연결해야 함 |
 | 김건우 · Q&A·FAQ | `src/pages/QnA.jsx` → `src/api/apiClient.js` → `backend/src/main/java/kr/ac/bu/attendance/PostController.java` → `PostService.java` → `PostRepository.java` 연결 필요 |
 | 박지연 · 공지·설정·더보기 | `src/pages/Notice.jsx`, `Settings.jsx`, `More.jsx` → `src/api/apiClient.js` → 백엔드 `PostController.java`, `StudentController.java`, `NotificationController.java`와 각 서비스 연결 필요 |
-| 담당 미정 · 로그인 | `src/api/apiClient.js` → `backend/src/main/java/kr/ac/bu/attendance/auth/AuthController.java` → `AuthService.java` → `UserCredentialsRepository.java` 연결 필요 |
+| 유다연 · 로그인 | `src/api/apiClient.js` → `backend/src/main/java/kr/ac/bu/attendance/auth/AuthController.java` → `AuthService.java` → `UserCredentialsRepository.java` 연결 필요 |
 
 위 경로는 담당자가 확인할 파일입니다. 개발용 시간표를 제외한 서비스 연결과 로그인 인증은 아직 미구현입니다.
 
@@ -71,7 +73,7 @@
 │   │   │   │       └── 📁 ac/
 │   │   │   │           └── 📁 bu/
 │   │   │   │               └── 📁 attendance/
-│   │   │   │                   ├── 📁 auth/ — 로그인 · 담당 미정
+│   │   │   │                   ├── 📁 auth/ — 로그인 · 유다연
 │   │   │   │                   │   ├── 📄 AuthController.java
 │   │   │   │                   │   ├── 📄 AuthService.java
 │   │   │   │                   │   ├── 📄 PasswordConfig.java
@@ -96,7 +98,12 @@
 │   │   │   └── 📁 resources/
 │   │   │       ├── 📄 application-dev.properties
 │   │   │       ├── 📄 application.properties
-│   │   │       ├── 📄 course_catalog.sql — 강좌 원본
+│   │   │       ├── 📁 catalog/
+│   │   │       │   ├── 📄 course_catalog_01.sql
+│   │   │       │   ├── 📄 course_catalog_02.sql
+│   │   │       │   ├── 📄 course_catalog_03.sql
+│   │   │       │   └── 📄 course_catalog_04.sql
+│   │   │       ├── 📄 demo-timetable.sql — 예시 시간표
 │   │   │       ├── 📄 demo-data.sql — 테스트 데이터
 │   │   │       └── 📄 schema.sql — DB 테이블 구조
 │   │   └── 📁 test/
@@ -105,7 +112,7 @@
 │   │               └── 📁 ac/
 │   │                   └── 📁 bu/
 │   │                       └── 📁 attendance/
-│   │                           ├── 📁 auth/ — 로그인 · 담당 미정
+│   │                           ├── 📁 auth/ — 로그인 · 유다연
 │   │                           │   └── 📄 PasswordServiceTest.java
 │   │                           └── 📄 DatabaseReadIntegrationTest.java
 │   ├── 📄 pom.xml
@@ -182,7 +189,7 @@
 | 시간표 · 출결 | `POST /api/attendance/{sessionId}/check-in` | `CheckInResult` |
 | Q&A · FAQ / 공지 | `GET /api/posts`, `GET /api/posts/{postId}`, `POST /api/posts` | 목록 필터 `type`, `faq`, `query`; 작성 `CreatePostRequest`; 응답 `Post` |
 | 설정 · 알림 | `PATCH /api/me/settings`, `GET /api/notifications` | `SettingsRequest` → `Settings`; `Notification` 목록 |
-| 로그인 | `POST /api/auth/login` | 학번 `studentNo`, 비밀번호 `password` → 토큰 응답; 담당자 미정 |
+| 로그인 | `POST /api/auth/login` | 학번 `studentNo`, 비밀번호 `password` → 토큰 응답; 담당자 유다연 |
 
 인증이 필요한 API의 프론트 요청 함수는 Bearer 토큰을 전달하도록 준비되어 있지만, 서버의 토큰 발급·검증은 아직 구현되지 않았습니다.
 

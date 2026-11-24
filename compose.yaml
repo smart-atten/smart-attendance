@@ -13,6 +13,10 @@ services:
       - mysql_data:/var/lib/mysql
       - ./backend/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
       - ./backend/src/main/resources/demo-data.sql:/docker-entrypoint-initdb.d/02-demo-data.sql:ro
-      - ./backend/src/main/resources/course_catalog.sql:/docker-entrypoint-initdb.d/03-course-catalog.sql:ro
+      - ./backend/src/main/resources/catalog/course_catalog_01.sql:/docker-entrypoint-initdb.d/03-catalog-01.sql:ro
+      - ./backend/src/main/resources/catalog/course_catalog_02.sql:/docker-entrypoint-initdb.d/03-catalog-02.sql:ro
+      - ./backend/src/main/resources/catalog/course_catalog_03.sql:/docker-entrypoint-initdb.d/03-catalog-03.sql:ro
+      - ./backend/src/main/resources/catalog/course_catalog_04.sql:/docker-entrypoint-initdb.d/03-catalog-04.sql:ro
+      - ./backend/src/main/resources/demo-timetable.sql:/docker-entrypoint-initdb.d/04-demo-timetable.sql:ro
 volumes:
   mysql_data:

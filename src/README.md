@@ -10,7 +10,7 @@ React 애플리케이션은 저장소 루트의 `src/`에 있습니다. 별도�
 | 시간표·출결조회 | 이은아 | `/timetable` | `pages/TimetablePage.jsx`, `pages/Timetable.jsx` |
 | Q&A·FAQ | 김건우 | `/qna` | `pages/QnA.jsx` |
 | 공지·환경설정·더보기 | 박지연 | `/notice`, `/settings`, `/more` | `pages/Notice.jsx`, `pages/Settings.jsx`, `pages/More.jsx` |
-| 로그인 | 담당 확인 필요 | 경로 미정 | `api/apiClient.js`의 로그인 요청 함수만 존재 |
+| 로그인 | 유다연 | 경로 미정 | `api/apiClient.js`의 로그인 요청 함수만 존재 |
 
 ## 현재 파일 트리
 
