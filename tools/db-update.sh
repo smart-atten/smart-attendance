@@ -51,4 +51,3 @@ for file in backend/src/main/resources/db-updates/[0-9]*.sql; do
   apply_file "$version" "$file"
 done
 printf '%s\n' '공통 DB 변경 적용 완료'
-
