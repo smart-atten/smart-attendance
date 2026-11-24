@@ -8,7 +8,7 @@ Spring Boot 서버와 MySQL을 사용합니다. 정식 API는 로그인·토큰 
 | 이은아 | 시간표·출결 | `TimetableController`, `TimetableService`, `StudentDataRepository`, `DevelopmentTimetableController` |
 | 김건우 | Q&A·FAQ | `PostController`, `PostService`, `PostRepository` |
 | 박지연 | 공지·설정·더보기 | `PostController`, `StudentController`, `NotificationController` 및 각 서비스·저장소 |
-| 미정 | 로그인 | `auth/` |
+| 유다연 | 로그인 | `auth/` |
 
 ## 서버 파일 트리
 
@@ -21,7 +21,7 @@ Spring Boot 서버와 MySQL을 사용합니다. 정식 API는 로그인·토큰 
 │   │   │       └── 📁 ac/
 │   │   │           └── 📁 bu/
 │   │   │               └── 📁 attendance/
-│   │   │                   ├── 📁 auth/ — 로그인 · 담당 미정
+│   │   │                   ├── 📁 auth/ — 로그인 · 유다연
 │   │   │                   │   ├── 📄 AuthController.java
 │   │   │                   │   ├── 📄 AuthService.java
 │   │   │                   │   ├── 📄 PasswordConfig.java
@@ -46,7 +46,12 @@ Spring Boot 서버와 MySQL을 사용합니다. 정식 API는 로그인·토큰 
 │   │   └── 📁 resources/
 │   │       ├── 📄 application-dev.properties
 │   │       ├── 📄 application.properties
-│   │       ├── 📄 course_catalog.sql — 강좌 원본
+│   │       ├── 📁 catalog/
+│   │       │   ├── 📄 course_catalog_01.sql
+│   │       │   ├── 📄 course_catalog_02.sql
+│   │       │   ├── 📄 course_catalog_03.sql
+│   │       │   └── 📄 course_catalog_04.sql
+│   │       ├── 📄 demo-timetable.sql — 예시 시간표
 │   │       ├── 📄 demo-data.sql — 테스트 데이터
 │   │       └── 📄 schema.sql — DB 테이블 구조
 │   └── 📁 test/
@@ -55,11 +60,11 @@ Spring Boot 서버와 MySQL을 사용합니다. 정식 API는 로그인·토큰 
 │               └── 📁 ac/
 │                   └── 📁 bu/
 │                       └── 📁 attendance/
-│                           ├── 📁 auth/ — 로그인 · 담당 미정
+│                           ├── 📁 auth/ — 로그인 · 유다연
 │                           │   └── 📄 PasswordServiceTest.java
 │                           └── 📄 DatabaseReadIntegrationTest.java
 ├── 📄 pom.xml
-└── 📄 README.md — 전체 소개·설치·구조
+└── 📄 README.md — 백엔드 구조
 ```
 
 ## DB와 연결 상태
@@ -72,10 +77,10 @@ Spring Boot 서버와 MySQL을 사용합니다. 정식 API는 로그인·토큰 
 | 이은아 · 시간표·출결 | `TimetableController.java` → `TimetableService.java` → `StudentDataRepository.java` | `enrollments`, `course_offerings`, `courses`, `schedule_slots`, `class_sessions`, `attendance_records` |
 | 김건우 · Q&A·FAQ | `PostController.java` → `PostService.java` → `PostRepository.java` | `posts`, `post_attachments` |
 | 박지연 · 공지·설정·더보기 | `PostController.java`, `StudentController.java`, `NotificationController.java` → 각 서비스와 저장소 | `posts`, `users`, `notifications`, `notification_recipients` |
-| 담당 미정 · 로그인 | `auth/AuthController.java` → `auth/AuthService.java` → `auth/UserCredentialsRepository.java`, `auth/PasswordService.java` | `users` |
+| 유다연 · 로그인 | `auth/AuthController.java` → `auth/AuthService.java` → `auth/UserCredentialsRepository.java`, `auth/PasswordService.java` | `users` |
 
 개발용 시간표 조회는 `DevelopmentTimetableController.java`가 DB를 직접 조회합니다. 개발용 출결 조회는 `TimetableService.java`와 `StudentDataRepository.java`를 사용합니다. 로그인 사용자 인증과 정식 서비스 연결은 아직 구현해야 합니다.
 
-`schema.sql`은 테이블 구조, `demo-data.sql`은 가상 계정과 수강, `course_catalog.sql`은 강좌 원본을 담습니다. Docker가 빈 볼륨을 최초 생성할 때 적용하며 기존 DB에는 다시 적용되지 않습니다.
+`schema.sql`은 테이블 구조, `demo-data.sql`은 가상 계정과 수강, `catalog/` SQL은 강좌 원본, `demo-timetable.sql`은 예시 시간표를 담습니다. Docker가 빈 볼륨을 최초 생성할 때 적용하며 기존 DB에는 다시 적용되지 않습니다.
 
 개발 프로필의 학생·시간표·출결 조회만 동작합니다. 개발용 출결 조회는 `GET /api/dev/students/{studentNo}/attendance`이며 인증 없이 로컬 테스트 용도로만 사용합니다. 정식 API, 로그인과 토큰, 출결 저장 및 게시판 권한은 미구현입니다. 저장소 함수는 존재하지만 인증된 사용자와 서비스에 아직 연결되지 않았습니다. API 계약과 실행법은 [프로젝트 README](../README.md)를 참고하세요.
