@@ -99,28 +99,29 @@ smart-attendance/
 
 ## 🐳 로컬 DB 실행
 
-Docker Desktop을 실행하고 저장소 루트에서 최초 한 번 환경 파일을 만든 뒤 DB를 시작합니다.
+Docker Desktop을 실행하고 저장소 루트에서 최초 한 번 환경 파일을 만듭니다.
 
 ```powershell
 Copy-Item .env.example .env
-docker compose up -d
 ```
 
-`.env` 값은 **로컬 개발 전용**이며 Git에 올리지 않습니다. DB는 `localhost:3307`, DB 이름과 계정은 `attendance`입니다. 3307 포트가 이미 사용 중이면 `compose.yaml`과 백엔드의 DB 주소를 함께 조정해야 합니다.
+`.env`를 열어 `DB_PASSWORD`와 `MYSQL_ROOT_PASSWORD`를 각자 설정하세요. 두 값은 다르게 설정하고, 영문자·숫자로만 구성해 입력합니다. `.env`는 Git에 올리지 않습니다. DB는 `localhost:3307`, DB 이름과 계정은 `attendance`입니다. 3307 포트가 이미 사용 중이면 `compose.yaml`과 백엔드의 DB 주소를 함께 조정해야 합니다.
+
+비밀번호를 설정한 뒤 DB를 시작합니다.
+
+```powershell
+docker compose up -d
+```
 
 처음 생성한 빈 DB에는 스키마, 가상 데이터, 강좌 원본 목록이 순서대로 자동 적용됩니다. 기존 볼륨에는 자동으로 다시 실행되지 않으며, 각 PC의 DB는 서로 동기화되지 않습니다. `docker compose stop`은 DB를 정지하고 데이터 볼륨은 유지합니다. 볼륨을 삭제하면 저장된 데이터도 삭제됩니다.
 
 ## ▶ 실행 방법
 
-**백엔드:** DB를 실행한 뒤 별도 PowerShell 창에서 아래 환경 변수를 설정합니다. `DB_PASSWORD`는 `.env`의 값과 일치해야 합니다. Compose의 `.env`는 서버 프로세스에 자동 전달되지 않습니다.
+**백엔드:** DB를 실행한 뒤 별도 PowerShell 창에서 실행합니다. 서버가 저장소 루트의 `.env`를 읽습니다.
 
 ```powershell
-$env:DB_URL='jdbc:mysql://localhost:3307/attendance?serverTimezone=Asia/Seoul&characterEncoding=UTF-8'
-$env:DB_USERNAME='attendance'
-$env:DB_PASSWORD='change-this-local-password'
-$env:SPRING_PROFILES_ACTIVE='dev'
 cd backend
-mvn spring-boot:run
+mvn spring-boot:run "-Dspring-boot.run.profiles=dev"
 ```
 
 **프런트엔드:** Node.js 설치 후 저장소 루트에서 실행합니다.
@@ -134,22 +135,19 @@ npm run dev
 
 ### Git Bash 실행
 
-저장소 루트에서 DB를 준비합니다. `.env`가 이미 있으면 복사하지 않습니다.
+저장소 루트에서 환경 파일을 만듭니다. `.env`가 이미 있으면 복사하지 않습니다.
 
 ```bash
 cp -n .env.example .env
-docker compose up -d
 ```
 
-별도 Git Bash 창에서 백엔드를 실행합니다. DB 비밀번호를 변경했다면 `.env`와 같은 값으로 설정합니다.
+`.env`에 비밀번호 두 개를 입력한 다음 `docker compose up -d`를 실행합니다.
+
+별도 Git Bash 창에서 백엔드를 실행합니다.
 
 ```bash
-export DB_URL='jdbc:mysql://localhost:3307/attendance?serverTimezone=Asia/Seoul&characterEncoding=UTF-8'
-export DB_USERNAME='attendance'
-export DB_PASSWORD='change-this-local-password'
-export SPRING_PROFILES_ACTIVE='dev'
 cd backend
-mvn spring-boot:run
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
 또 다른 창에서 저장소 루트로 이동해 `npm ci` 후 `npm run dev`를 실행합니다.
