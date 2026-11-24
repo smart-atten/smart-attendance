@@ -1,7 +1,6 @@
 // DB 설계서 1.2 기준. Navbar, Home, Settings, More에서 공유합니다.
 export const ROLE = /** @type {const} */ ({
   STUDENT: 'STUDENT',
-  ADMIN: 'ADMIN',
 })
 
 /** @typedef {typeof ROLE[keyof typeof ROLE]} Role */
