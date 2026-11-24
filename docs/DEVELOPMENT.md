@@ -2,6 +2,8 @@
 
 ## DB 준비
 
+공유된 DB 변경을 한 번에 적용하려면 저장소 루트에서 `bash tools/db-update.sh`를 실행합니다. 최초 강좌 목록과 예시 시간표, `backend/src/main/resources/db-updates/`의 번호가 붙은 SQL을 순서대로 적용하고 `db_migrations`에 기록합니다. 적용된 파일은 수정하지 말고 새 파일을 추가하세요. 이 명령은 SQL을 DB에서 내보내거나 다른 PC의 데이터를 가져오지 않습니다.
+
 저장소 루트에서 `.env.example`을 `.env`로 복사한 후 `DB_PASSWORD`와 `MYSQL_ROOT_PASSWORD`를 각자 설정하고 `docker compose up -d`를 실행합니다. `.env`는 Git에 올리지 않습니다. 두 값은 다르게 설정하고 영문자·숫자로만 구성합니다. 변경한 비밀번호는 기존 MySQL 볼륨에 자동 적용되지 않습니다.
 
 처음 생성한 빈 MySQL 볼륨에는 `schema.sql`, `demo-data.sql`, `catalog/course_catalog_01.sql`부터 `course_catalog_04.sql`, `demo-timetable.sql`이 자동으로 순서대로 적용됩니다. 기존 볼륨에는 적용되지 않으며 자동 마이그레이션은 지원하지 않습니다. 데이터가 있는 볼륨을 삭제하지 마세요. 기존 개발 DB에 강좌 목록을 추가하려면:

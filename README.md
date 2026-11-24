@@ -230,6 +230,16 @@ docker compose up -d
 
 처음 생성한 빈 DB에는 스키마, 가상 데이터, 강좌 원본 목록이 순서대로 자동 적용됩니다. 기존 볼륨에는 자동으로 다시 실행되지 않으며, 각 PC의 DB는 서로 동기화되지 않습니다. `docker compose stop`은 DB를 정지하고 데이터 볼륨은 유지합니다. 볼륨을 삭제하면 저장된 데이터도 삭제됩니다.
 
+팀에서 Git으로 공유한 DB 변경을 기존 로컬 DB에 적용하려면 저장소 루트에서 Git Bash로 실행합니다.
+
+```bash
+git pull origin develop
+docker compose up -d
+bash tools/db-update.sh
+```
+
+적용 기록은 각 DB의 `db_migrations`에 남으며 이미 적용한 파일은 건너뜁니다. 팀이 추가하는 변경은 `backend/src/main/resources/db-updates/`에 `001_설명.sql` 형식의 영문 파일명으로 추가합니다. 이미 적용된 파일을 수정하지 말고 새 번호의 파일을 추가하세요. 이 명령은 Git에 공유된 SQL만 적용하며 다른 사람의 로컬 DB 데이터나 실제 학번을 자동으로 가져오지 않습니다. 대량 변경 전에는 DB를 백업하세요.
+
 ## ▶ 실행 방법
 
 **백엔드:** DB를 실행한 뒤 별도 PowerShell 창에서 실행합니다. 서버가 저장소 루트의 `.env`를 읽습니다.
