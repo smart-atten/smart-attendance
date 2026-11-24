@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
-import Timetable from "./pages/Timetable";
+import TimetablePage from "./pages/TimetablePage";
 import QnA from "./pages/QnA";
 import Notice from "./pages/Notice";
 import Settings from "./pages/Settings";
@@ -17,7 +17,7 @@ export default function App() {
           <main className="flex-1 bg-gray-50">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/timetable" element={<Timetable />} />
+              <Route path="/timetable" element={<TimetablePage />} />
               <Route path="/notice" element={<Notice />} />
               <Route path="/qna" element={<QnA />} />
               <Route path="/settings" element={<Settings />} />

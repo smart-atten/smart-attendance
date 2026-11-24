@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { DELIVERY_TYPE, WEEKDAY, WEEKDAY_LABELS } from "../domain/timetable.js";
+import { layoutDay, timetableRange } from "../domain/timetableScale.js";
 
 const weekdays = [
   WEEKDAY.MONDAY,
@@ -15,6 +17,23 @@ function formatTime(time) {
 
 function courseLabel(course) {
   return `${course.course_name}-${course.section_code}`;
+}
+
+function StudentInfo({ student }) {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+  const weekday = new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', weekday: 'long' }).format(now);
+  const date = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
+  const time = new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(now);
+  return (
+    <div className="bg-white px-4 py-4 text-center">
+      <p className="text-base font-bold text-gray-900">{student.display_name} [{student.student_no}] {weekday}</p>
+      <p className="mt-1 text-sm text-gray-600">{date} ({time})</p>
+    </div>
+  );
 }
 
 function scheduleLabel(course) {
@@ -91,9 +110,10 @@ function WeeklyTimetable({ courses }) {
   const days = [
     ...new Set([...weekdays, ...blocks.map(({ slot }) => slot.weekday)]),
   ].sort((a, b) => a - b);
-  const times = [
-    ...new Set(blocks.flatMap(({ slot }) => [slot.start_time, slot.end_time])),
-  ].sort();
+  const { start, end } = timetableRange(blocks.map(({ slot }) => slot));
+  const pixelsPerHour = 56;
+  const height = ((end - start) / 60) * pixelsPerHour;
+  const hours = Array.from({ length: (end - start) / 60 + 1 }, (_, index) => start + index * 60);
   const coursesWithoutSlots = courses.filter(
     (course) => course.slots.length === 0,
   );
@@ -101,7 +121,6 @@ function WeeklyTimetable({ courses }) {
   return (
     <div className="bg-[#141414] p-2 text-white">
       <div className="overflow-hidden rounded-xl border border-[#333]">
-        {blocks.length > 0 && (
           <div className="overflow-x-auto">
             <div
               className="grid"
@@ -113,14 +132,14 @@ function WeeklyTimetable({ courses }) {
                 <div className="border-b border-[#333] py-2 text-center text-xs text-gray-300">
                   시간
                 </div>
-                {times.slice(0, -1).map((time) => (
-                  <div
-                    key={time}
-                    className="h-14 border-b border-[#333] pt-1 text-center text-[11px] text-gray-300"
-                  >
-                    {formatTime(time)}
-                  </div>
-                ))}
+                <div className="relative" style={{ height }}>
+                  {hours.map((minutes) => (
+                    <span key={minutes} className="absolute left-0 right-0 text-center text-[11px] text-gray-300"
+                      style={{ top: ((minutes - start) / 60) * pixelsPerHour, transform: minutes === end ? 'translateY(-100%)' : 'none' }}>
+                      {String(Math.floor(minutes / 60)).padStart(2, '0')}:00
+                    </span>
+                  ))}
+                </div>
               </div>
 
               {days.map((day) => (
@@ -132,20 +151,22 @@ function WeeklyTimetable({ courses }) {
                     {WEEKDAY_LABELS[day]}
                   </div>
                   <div
-                    className="grid grid-flow-col auto-cols-fr"
+                    className="relative"
                     style={{
-                      gridTemplateRows: `repeat(${times.length - 1}, 3.5rem)`,
+                      height,
+                      backgroundImage: 'repeating-linear-gradient(to bottom, transparent 0, transparent 55px, #333 55px, #333 56px)',
                     }}
                   >
-                    {blocks
-                      .filter(({ slot }) => slot.weekday === day)
-                      .map(({ course, slot }) => (
+                    {layoutDay(blocks.filter(({ slot }) => slot.weekday === day))
+                      .map(({ course, slot, start: blockStart, end: blockEnd, lane, lanes }) => (
                         <div
                           key={`${course.offering_id}-${slot.slot_id}`}
-                          className="min-w-0 overflow-auto break-words border border-[#141414] bg-[#244887] p-1 text-[11px] leading-tight"
+                          className="absolute overflow-auto break-words border border-[#141414] bg-[#244887] p-1 text-[11px] leading-tight"
                           style={{
-                            gridRowStart: times.indexOf(slot.start_time) + 1,
-                            gridRowEnd: times.indexOf(slot.end_time) + 1,
+                            top: ((blockStart - start) / 60) * pixelsPerHour,
+                            height: ((blockEnd - blockStart) / 60) * pixelsPerHour,
+                            left: `${(lane / lanes) * 100}%`,
+                            width: `${100 / lanes}%`,
                           }}
                         >
                           <span className="block font-bold">
@@ -161,7 +182,6 @@ function WeeklyTimetable({ courses }) {
               ))}
             </div>
           </div>
-        )}
 
         {coursesWithoutSlots.length > 0 && (
           <ul className="divide-y divide-[#333]">
@@ -181,7 +201,7 @@ function WeeklyTimetable({ courses }) {
   );
 }
 
-export default function Timetable({ courses = [] }) {
+export default function Timetable({ courses = [], student }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedId = searchParams.get("course");
   const selectedCourse = courses.find(
@@ -206,6 +226,8 @@ export default function Timetable({ courses = [] }) {
         <>
           <WeeklyTimetable courses={courses} />
 
+          {student && <StudentInfo student={student} />}
+
           <div className="border-y border-[#e5e8ef] bg-white px-4 py-4 text-center">
             <h1 className="break-words text-[15px] font-bold">
               {courseLabel(selectedCourse)}
@@ -227,14 +249,7 @@ export default function Timetable({ courses = [] }) {
         </>
       ) : (
         <>
-          <div className="bg-white px-4 py-4 text-center">
-            <h1 className="text-[15px] font-bold">출결조회 / 시간표</h1>
-            {courses.length > 0 && (
-              <p className="mt-1 text-xs text-gray-600">
-                과목을 누르면 주간 시간표가 열려요.
-              </p>
-            )}
-          </div>
+          {student && <StudentInfo student={student} />}
 
           <h2 className="bg-[#0b42a4] px-4 py-2.5 text-center text-sm font-bold text-white">
             요일별 강의 시간표
