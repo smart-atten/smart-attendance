@@ -15,35 +15,47 @@ React 애플리케이션은 저장소 루트의 `src/`에 있습니다. 별도�
 ## 현재 파일 트리
 
 ```text
-src/
-├── README.md
-├── main.jsx                      React 진입점
-├── App.jsx                       공통 레이아웃과 화면 경로
-├── index.css                     전역 스타일
-├── App.css                       기존 예제 스타일
-├── api/
-│   └── apiClient.js              공통 요청·기능별 API 호출 함수
-├── components/
-│   └── Navbar.jsx                공통 헤더와 메뉴
-├── domain/
-│   ├── attendance.js             출결 코드·화면 데이터 형식
-│   ├── post.js                   게시글 코드·데이터 형식
-│   ├── user.js                   사용자 권한·데이터 형식
-│   ├── timetable.js              시간표 코드·데이터 형식
-│   ├── timetableMapper.js        개발용 조회 응답을 강좌별로 묶기
-│   └── timetableScale.js         시간축 범위·겹치는 수업 배치
-├── pages/
-│   ├── Home.jsx                  출석체크 홈
-│   ├── TimetablePage.jsx         개발용 시간표 데이터 조회
-│   ├── Timetable.jsx             강좌 목록·시간표 UI
-│   ├── QnA.jsx                   질문·FAQ 화면
-│   ├── Notice.jsx                공지 화면
-│   ├── Settings.jsx              환경설정 화면
-│   └── More.jsx                  더보기 화면
-└── assets/                       이미지와 기본 리소스
+📁 src/
+├── 📁 api/
+│   └── 📄 apiClient.js — 공통 API 요청
+├── 📁 assets/
+│   ├── 📄 hero.png
+│   ├── 📄 react.svg
+│   └── 📄 vite.svg
+├── 📁 components/
+│   └── 📄 Navbar.jsx — 공통 메뉴 · 유다연
+├── 📁 domain/
+│   ├── 📄 attendance.js
+│   ├── 📄 post.js
+│   ├── 📄 timetable.js
+│   ├── 📄 timetableMapper.js — 시간표 데이터 변환 · 이은아
+│   ├── 📄 timetableScale.js — 시간표 시간축 · 이은아
+│   └── 📄 user.js
+├── 📁 pages/
+│   ├── 📄 Home.jsx — 홈 · 유다연
+│   ├── 📄 More.jsx — 더보기 · 박지연
+│   ├── 📄 Notice.jsx — 공지 · 박지연
+│   ├── 📄 QnA.jsx — Q&A·FAQ · 김건우
+│   ├── 📄 Settings.jsx — 설정 · 박지연
+│   ├── 📄 Timetable.jsx — 시간표 화면 · 이은아
+│   └── 📄 TimetablePage.jsx — 시간표 데이터 조회 · 이은아
+├── 📄 App.css
+├── 📄 App.jsx — 공통 화면 연결 · 유다연
+├── 📄 index.css
+├── 📄 main.jsx
+└── 📄 README.md — 전체 소개·설치·구조
 ```
 
 ## 연결 구조
+
+화면 경로는 `App.jsx`, 메뉴는 `components/Navbar.jsx`에서 확인합니다. 서버 호출은 `api/apiClient.js`에 모여 있습니다. 각 담당자는 위 표의 화면 파일과 다음 공통 경로를 함께 확인합니다.
+
+| 담당 | 화면 | 확인할 연결 파일 |
+|---|---|---|
+| 유다연 | `pages/Home.jsx` | `components/Navbar.jsx`, `domain/`, `api/apiClient.js` |
+| 이은아 | `pages/TimetablePage.jsx`, `pages/Timetable.jsx` | `domain/timetableMapper.js`, `domain/timetableScale.js`, `api/apiClient.js` |
+| 김건우 | `pages/QnA.jsx` | `domain/post.js`, `api/apiClient.js` |
+| 박지연 | `pages/Notice.jsx`, `pages/Settings.jsx`, `pages/More.jsx` | `domain/post.js`, `domain/user.js`, `api/apiClient.js` |
 
 ```text
 App.jsx → TimetablePage.jsx → apiClient.js → 개발용 학생·시간표 API → MySQL
