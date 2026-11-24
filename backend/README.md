@@ -51,6 +51,8 @@ Spring Boot 서버와 MySQL을 사용합니다. 정식 API는 로그인·토큰 
 │   │       │   ├── 📄 course_catalog_02.sql
 │   │       │   ├── 📄 course_catalog_03.sql
 │   │       │   └── 📄 course_catalog_04.sql
+│   │       ├── 📁 db-updates/
+│   │       │   └── 📄 001_student_constraints.sql
 │   │       ├── 📄 demo-timetable.sql — 예시 시간표
 │   │       ├── 📄 demo-data.sql — 테스트 데이터
 │   │       └── 📄 schema.sql — DB 테이블 구조

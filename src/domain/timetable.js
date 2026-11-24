@@ -1,4 +1,3 @@
-// DB 설계서 1.2 기준. Timetable의 반복 시간표에서 사용합니다.
 export const DELIVERY_TYPE = /** @type {const} */ ({
   OFFLINE: 'OFFLINE',
   CYBER: 'CYBER',

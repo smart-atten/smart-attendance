@@ -1,8 +1,7 @@
--- Development draft based on design v1.2. Apply explicitly to an empty development DB.
 CREATE TABLE users (
  user_id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(50) UNIQUE,
  student_no VARCHAR(20) UNIQUE, password_hash VARCHAR(255) NOT NULL,
- display_name VARCHAR(80) NOT NULL, role VARCHAR(10) NOT NULL DEFAULT 'STUDENT' CHECK (role = 'STUDENT'),
+ display_name VARCHAR(80) NOT NULL, role VARCHAR(10) NOT NULL DEFAULT 'STUDENT' CONSTRAINT ck_users_student_role CHECK (role = 'STUDENT'),
  push_enabled BOOLEAN NOT NULL DEFAULT FALSE, push_endpoint TEXT, push_p256dh VARCHAR(255), push_auth VARCHAR(255),
  created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)
 );
@@ -27,7 +26,7 @@ CREATE TABLE enrollments (
 );
 CREATE TABLE class_sessions (
  session_id BIGINT AUTO_INCREMENT PRIMARY KEY, offering_id BIGINT NOT NULL, session_date DATE NOT NULL,
- session_no SMALLINT NOT NULL DEFAULT 1, week_no SMALLINT NOT NULL, starts_at DATETIME(3) NOT NULL,
+ session_no SMALLINT NOT NULL DEFAULT 1, week_no SMALLINT NOT NULL CONSTRAINT ck_class_sessions_week CHECK (week_no >= 1), starts_at DATETIME(3) NOT NULL,
  ends_at DATETIME(3) NOT NULL, checkin_open_at DATETIME(3) NOT NULL, checkin_close_at DATETIME(3) NOT NULL,
  FOREIGN KEY (offering_id) REFERENCES course_offerings(offering_id), UNIQUE (offering_id, session_date, session_no)
 );
@@ -40,12 +39,13 @@ CREATE TABLE attendance_records (
 );
 CREATE TABLE attendance_events (
  event_id BIGINT AUTO_INCREMENT PRIMARY KEY, attendance_id BIGINT NOT NULL, actor_user_id BIGINT,
- event_type VARCHAR(20) NOT NULL, outcome VARCHAR(10) NOT NULL, previous_status VARCHAR(12), new_status VARCHAR(12),
+ event_type VARCHAR(20) NOT NULL CONSTRAINT ck_attendance_events_type CHECK (event_type IN ('CHECKIN_ATTEMPT','STATUS_CHANGE')),
+ outcome VARCHAR(10) NOT NULL CONSTRAINT ck_attendance_events_outcome CHECK (outcome IN ('SUCCESS','FAILED')), previous_status VARCHAR(12), new_status VARCHAR(12),
  device_info VARCHAR(255), reason VARCHAR(255), occurred_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
  FOREIGN KEY (attendance_id) REFERENCES attendance_records(attendance_id), FOREIGN KEY (actor_user_id) REFERENCES users(user_id)
 );
 CREATE TABLE posts (
- post_id BIGINT AUTO_INCREMENT PRIMARY KEY, author_id BIGINT NOT NULL, post_type VARCHAR(10) NOT NULL,
+ post_id BIGINT AUTO_INCREMENT PRIMARY KEY, author_id BIGINT NOT NULL, post_type VARCHAR(10) NOT NULL CONSTRAINT ck_posts_type CHECK (post_type IN ('QUESTION','NOTICE')),
  title VARCHAR(200) NOT NULL, body TEXT NOT NULL, is_anonymous BOOLEAN NOT NULL DEFAULT FALSE,
  is_faq BOOLEAN NOT NULL DEFAULT FALSE, answer_body TEXT, answered_by BIGINT, answered_at DATETIME(3),
  created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -58,14 +58,14 @@ CREATE TABLE post_attachments (
  uploaded_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3), FOREIGN KEY (post_id) REFERENCES posts(post_id)
 );
 CREATE TABLE notifications (
- notification_id BIGINT AUTO_INCREMENT PRIMARY KEY, notification_type VARCHAR(25) NOT NULL, related_post_id BIGINT,
+ notification_id BIGINT AUTO_INCREMENT PRIMARY KEY, notification_type VARCHAR(25) NOT NULL CONSTRAINT ck_notifications_type CHECK (notification_type IN ('NOTICE','ATTENDANCE_START','CORRECTION_DEADLINE','SYSTEM')), related_post_id BIGINT,
  related_session_id BIGINT, title VARCHAR(200) NOT NULL, body TEXT NOT NULL,
  created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3), FOREIGN KEY (related_post_id) REFERENCES posts(post_id),
  FOREIGN KEY (related_session_id) REFERENCES class_sessions(session_id)
 );
 CREATE TABLE notification_recipients (
  recipient_id BIGINT AUTO_INCREMENT PRIMARY KEY, notification_id BIGINT NOT NULL, user_id BIGINT NOT NULL,
- delivery_status VARCHAR(10) NOT NULL DEFAULT 'PENDING', sent_at DATETIME(3), read_at DATETIME(3), error_code VARCHAR(60),
+ delivery_status VARCHAR(10) NOT NULL DEFAULT 'PENDING' CONSTRAINT ck_notification_recipients_status CHECK (delivery_status IN ('PENDING','SENT','FAILED','SKIPPED')), sent_at DATETIME(3), read_at DATETIME(3), error_code VARCHAR(60),
  FOREIGN KEY (notification_id) REFERENCES notifications(notification_id), FOREIGN KEY (user_id) REFERENCES users(user_id),
  UNIQUE (notification_id, user_id)
 );

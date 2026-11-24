@@ -105,6 +105,8 @@ SQL은 `backend/src/main/resources/` 아래에 있으며, 강좌 목록은 GitHu
 │   │   │       │   ├── 📄 course_catalog_02.sql
 │   │   │       │   ├── 📄 course_catalog_03.sql
 │   │   │       │   └── 📄 course_catalog_04.sql
+│   │   │       ├── 📁 db-updates/
+│   │   │       │   └── 📄 001_student_constraints.sql
 │   │   │       ├── 📄 demo-timetable.sql — 예시 시간표
 │   │   │       ├── 📄 demo-data.sql — 테스트 데이터
 │   │   │       └── 📄 schema.sql — DB 테이블 구조
@@ -118,7 +120,7 @@ SQL은 `backend/src/main/resources/` 아래에 있으며, 강좌 목록은 GitHu
 │   │                           │   └── 📄 PasswordServiceTest.java
 │   │                           └── 📄 DatabaseReadIntegrationTest.java
 │   ├── 📄 pom.xml
-│   └── 📄 README.md — 전체 소개·설치·구조
+│   └── 📄 README.md — 백엔드 구조
 ├── 📁 docs/ — 개발 환경 안내
 │   └── 📄 DEVELOPMENT.md
 ├── 📁 public/
@@ -152,11 +154,12 @@ SQL은 `backend/src/main/resources/` 아래에 있으며, 강좌 목록은 GitHu
 │   ├── 📄 App.jsx — 공통 화면 연결 · 유다연
 │   ├── 📄 index.css
 │   ├── 📄 main.jsx
-│   └── 📄 README.md — 전체 소개·설치·구조
+│   └── 📄 README.md — 프런트엔드 구조
 ├── 📁 test/
 │   ├── 📄 timetableMapper.test.js
 │   └── 📄 timetableScale.test.js
 ├── 📁 tools/
+│   ├── 📄 db-update.sh — 공통 DB 변경 적용
 │   └── 📄 export_course_catalog.py
 ├── 📄 .env.example
 ├── 📄 .gitignore

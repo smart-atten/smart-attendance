@@ -1,9 +1,7 @@
 SET NAMES utf8mb4;
--- Fictional accounts and enrollments. No password login is implemented.
 INSERT INTO users (student_no,password_hash,display_name,role) VALUES
  ('DEMO001','UNUSABLE','이은아','STUDENT'), ('DEMO002','UNUSABLE','김건우','STUDENT'),
  ('DEMO003','UNUSABLE','유다연','STUDENT'), ('DEMO004','UNUSABLE','박지연','STUDENT');
--- Course code and section are taken from the attached course list. Year, term, times and registrations are illustrative.
 INSERT INTO courses (course_code,course_name) VALUES ('01022','경영학원론');
 INSERT INTO course_offerings (course_id,academic_year,term_code,section_code,instructor_name,delivery_type)
  SELECT course_id,2026,'2','01',NULL,'OFFLINE' FROM courses WHERE course_code='01022';

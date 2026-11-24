@@ -1,4 +1,3 @@
-// DB 설계서 1.2 기준. Home과 Timetable의 출결 화면에서 공유합니다.
 export const ATTENDANCE_STATUS = /** @type {const} */ ({
   PENDING: 'PENDING',
   PRESENT: 'PRESENT',
