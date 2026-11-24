@@ -38,7 +38,7 @@
 | 구분 | 기술 |
 |---|---|
 | 프런트엔드 | React 19, Vite, React Router, Tailwind CSS |
-| 백엔드 | Java 21, Spring Boot 3.5, Maven, Spring JDBC, Lombok, Spring Security Crypto |
+| 백엔드 | Java 17, Spring Boot 3.5, Maven, Spring JDBC, Lombok, Spring Security Crypto |
 | 데이터베이스 | MySQL 8.0, Docker Compose |
 | 디자인 · 협업 | [Figma 와이어프레임](https://www.figma.com/design/iVCLV3QNbnRWf9CjSYebCy/1%EC%A1%B0_UI?node-id=2-5593), Git, GitHub |
 
@@ -200,7 +200,7 @@ SQL은 `backend/src/main/resources/` 아래에 있으며, 강좌 목록은 GitHu
 | 도구 | 설치 기준 | 확인 명령 |
 |---|---|---|
 | Node.js · npm | Node.js 24, npm 11 | `node -v`, `npm -v` |
-| Java | JDK 21 | `java -version` |
+| Java | JDK 17 | `java -version` |
 | Maven | 3.9 계열 (확인 환경 3.9.16) | `mvn -v` |
 | Docker Desktop · Compose | Docker Desktop 실행, Docker Compose v2 | `docker --version`, `docker compose version` |
 | MySQL | Docker 이미지 `mysql:8.0` 사용 | `docker compose ps` |
