@@ -1,3 +1,4 @@
+SET NAMES utf8mb4;
 -- Fictional accounts and enrollments. No password login is implemented.
 INSERT INTO users (student_no,password_hash,display_name,role) VALUES
  ('DEMO001','UNUSABLE','이은아','STUDENT'), ('DEMO002','UNUSABLE','김건우','STUDENT'),
