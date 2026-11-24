@@ -3,6 +3,15 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
+if command -v sha256sum >/dev/null 2>&1; then
+  checksum_file() { tr -d '\r' < "$1" | sha256sum | cut -d ' ' -f 1; }
+elif command -v shasum >/dev/null 2>&1; then
+  checksum_file() { tr -d '\r' < "$1" | shasum -a 256 | cut -d ' ' -f 1; }
+else
+  printf '%s\n' 'sha256sum 또는 shasum이 필요합니다.' >&2
+  exit 1
+fi
+
 mysql_exec() {
   docker compose exec -T mysql sh -c 'exec mysql --default-character-set=utf8mb4 -h 127.0.0.1 -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" "$@"' sh "$@"
 }
@@ -21,7 +30,7 @@ mysql_exec -e 'CREATE TABLE IF NOT EXISTS db_migrations (version VARCHAR(190) PR
 
 apply_file() {
   local version="$1" file="$2" checksum existing
-  checksum=$(tr -d '\r' < "$file" | sha256sum | cut -d ' ' -f 1)
+  checksum=$(checksum_file "$file")
   existing=$(mysql_exec -N -s -e "SELECT checksum FROM db_migrations WHERE version = '$version'")
   if [ -n "$existing" ]; then
     if [ "$existing" != "$checksum" ]; then

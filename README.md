@@ -31,6 +31,8 @@
 
 현재 화면 이동과 시간표 UI, 가상 학생의 개발용 시간표 조회가 연결되어 있습니다. 로그인·실제 출석 처리·게시판·알림과 실제 사용자 기준 화면-DB 연동은 추가 구현이 필요합니다.
 
+로그인과 토큰 검증은 정식 사용자별 시간표·출결 및 인증이 필요한 게시판 연동의 선행 작업입니다. 각 화면과 게시판의 기본 기능은 인증 구현과 병행해 개발할 수 있습니다.
+
 ## 🛠 기술 스택
 
 | 구분 | 기술 |
@@ -277,6 +279,21 @@ mvn spring-boot:run -Dspring-boot.run.profiles=dev
 
 또 다른 창에서 저장소 루트로 이동해 `npm ci` 후 `npm run dev`를 실행합니다.
 
+### macOS + Colima 실행
+
+Docker Desktop 대신 Colima, Docker CLI와 Compose 플러그인을 사용합니다. Homebrew 설치 후 다음을 실행합니다.
+
+```bash
+brew install colima docker docker-compose
+mkdir -p ~/.docker/cli-plugins
+ln -s "$(brew --prefix)/opt/docker-compose/bin/docker-compose" ~/.docker/cli-plugins/docker-compose
+colima start
+docker context use colima
+docker compose version
+```
+
+이미 `~/.docker/cli-plugins/docker-compose`가 있으면 기존 파일을 확인하고 링크 생성은 생략합니다. 프로젝트를 복제한 후 `cp -n .env.example .env`, `.env`의 비밀번호 설정, `docker compose up -d`를 실행합니다. 백엔드와 프런트 명령은 위 안내와 같습니다. DB 업데이트 스크립트는 Git Bash의 `sha256sum` 또는 macOS의 `shasum`을 사용합니다.
+
 개발용 시간표는 기본적으로 `DEMO001`을 조회합니다. 별도의 로컬 학생 번호를 사용하려면 저장소 루트에 Git에 포함되지 않는 `.env.local`을 만들고 `VITE_DEV_STUDENT_NO=학생번호`를 입력한 뒤 프런트 서버를 다시 시작합니다. 이 값은 브라우저에 노출되므로 비밀번호나 비밀값을 넣지 마세요. 해당 학생과 수강 데이터는 각자의 로컬 DB에 별도로 있어야 합니다.
 
 ## 🌿 브랜치 운영
@@ -296,4 +313,4 @@ git pull origin develop
 git switch -c feature/timetable/grid
 ```
 
-작업 후 커밋하고 원격 브랜치를 push한 다음 GitHub에서 PR을 생성합니다. `main`과 `develop`에는 현재 PR과 승인 1건이 필요한 규칙이 적용되어 있습니다. 두 사람만 병합하도록 제한하는 설정과 `develop` 기본 브랜치 전환은 관리자 확인이 필요합니다.
+작업 후 커밋하고 원격 브랜치를 push한 다음 GitHub에서 PR을 생성합니다. 기본 브랜치는 `develop`이며 `main`과 `develop`에 적용되는 보호 규칙은 저장소 관리자 설정에서 확인합니다.
