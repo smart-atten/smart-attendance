@@ -10,7 +10,6 @@ import More from "./pages/More";
 export default function App() {
   return (
     <BrowserRouter>
-      {/* PC에서 봐도 가운데에 스마트폰 앱 크기(최대 430px)로 예쁘게 고정 */}
       <div className="min-h-screen bg-gray-200 flex justify-center">
         <div className="w-full md:max-w-[440px] min-h-screen bg-white shadow-2xl flex flex-col relative overflow-x-hidden">
           <Navbar />

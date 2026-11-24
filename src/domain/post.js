@@ -1,4 +1,3 @@
-// DB 설계서 1.2 기준. QnA와 Notice에서 공유합니다.
 export const POST_TYPE = /** @type {const} */ ({
   QUESTION: 'QUESTION',
   NOTICE: 'NOTICE',
@@ -16,10 +15,6 @@ export const POST_TYPE = /** @type {const} */ ({
  */
 
 /**
- * 게시글. 서버는 익명 글의 author_display_name을 '익명'으로 내려줍니다.
- * FAQ는 QUESTION이면서 is_faq가 true인 게시글입니다.
- * created_at과 answered_at은 시간대 오프셋을 포함한 ISO 8601입니다.
- *
  * @typedef {object} Post
  * @property {string} post_id
  * @property {PostType} post_type
