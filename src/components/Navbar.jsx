@@ -1,14 +1,17 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ROLE } from '../domain/user';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { pathname } = useLocation();
 
-  const currentUser = {
-    display_name: '홍길동',
-    role: ROLE.STUDENT,
+  const titles = {
+    '/': '출석체크(HOME)',
+    '/timetable': '출결조회/시간표',
+    '/qna': 'Q&A',
+    '/notice': '공지사항',
+    '/settings': '환경설정',
+    '/more': '더보기',
   };
 
   const menus = [
@@ -22,12 +25,12 @@ export default function Navbar() {
   return (
     <>
       <header className="bg-[#0b338f] text-white h-14 px-4 flex items-center justify-between sticky top-0 z-30 shadow-md">
-        <button onClick={() => setIsOpen(true)} className="p-1 focus:outline-none">
+        <button onClick={() => setIsOpen(true)} className="p-1 focus:outline-none" aria-label="메뉴 열기">
           <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
-        <h1 className="text-base font-bold tracking-tight">백석대학교 스마트출결</h1>
+        <h1 className="text-base font-bold tracking-tight">{titles[pathname] ?? '스마트출결'}</h1>
         <div className="w-7" />
       </header>
 
