@@ -48,6 +48,15 @@ React 애플리케이션은 저장소 루트의 `src/`에 있습니다. 별도�
 
 ## 연결 구조
 
+화면 경로는 `App.jsx`, 메뉴는 `components/Navbar.jsx`에서 확인합니다. 서버 호출은 `api/apiClient.js`에 모여 있습니다. 각 담당자는 위 표의 화면 파일과 다음 공통 경로를 함께 확인합니다.
+
+| 담당 | 화면 | 확인할 연결 파일 |
+|---|---|---|
+| 유다연 | `pages/Home.jsx` | `components/Navbar.jsx`, `domain/`, `api/apiClient.js` |
+| 이은아 | `pages/TimetablePage.jsx`, `pages/Timetable.jsx` | `domain/timetableMapper.js`, `domain/timetableScale.js`, `api/apiClient.js` |
+| 김건우 | `pages/QnA.jsx` | `domain/post.js`, `api/apiClient.js` |
+| 박지연 | `pages/Notice.jsx`, `pages/Settings.jsx`, `pages/More.jsx` | `domain/post.js`, `domain/user.js`, `api/apiClient.js` |
+
 ```text
 App.jsx → TimetablePage.jsx → apiClient.js → 개발용 학생·시간표 API → MySQL
                              ↓

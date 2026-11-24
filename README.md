@@ -49,6 +49,16 @@
 
 강좌 목록 엑셀의 원본 2,903건은 `course_catalog_import`에 보관하고, 학생과 수강 정보는 별도로 만든 가상 데이터를 사용합니다. 학기·교시 시각이 확정되기 전까지 원본 목록을 실제 시간표로 자동 변환하지 않습니다.
 
+| 담당 | 화면에서 서버까지 확인할 경로 |
+|---|---|
+| 유다연 · 공통·홈 | `src/App.jsx` → `src/components/Navbar.jsx`, `src/pages/Home.jsx` → `src/api/apiClient.js` → `backend/src/main/java/kr/ac/bu/attendance/StudentController.java`, `StudentService.java` |
+| 이은아 · 시간표·출결 | `src/pages/TimetablePage.jsx` → `src/api/apiClient.js` → `backend/src/main/java/kr/ac/bu/attendance/DevelopmentTimetableController.java` → MySQL. 정식 API는 `TimetableController.java` → `TimetableService.java` → `StudentDataRepository.java`를 연결해야 함 |
+| 김건우 · Q&A·FAQ | `src/pages/QnA.jsx` → `src/api/apiClient.js` → `backend/src/main/java/kr/ac/bu/attendance/PostController.java` → `PostService.java` → `PostRepository.java` 연결 필요 |
+| 박지연 · 공지·설정·더보기 | `src/pages/Notice.jsx`, `Settings.jsx`, `More.jsx` → `src/api/apiClient.js` → 백엔드 `PostController.java`, `StudentController.java`, `NotificationController.java`와 각 서비스 연결 필요 |
+| 담당 미정 · 로그인 | `src/api/apiClient.js` → `backend/src/main/java/kr/ac/bu/attendance/auth/AuthController.java` → `AuthService.java` → `UserCredentialsRepository.java` 연결 필요 |
+
+위 경로는 담당자가 확인할 파일입니다. 개발용 시간표를 제외한 서비스 연결과 로그인 인증은 아직 미구현입니다.
+
 ## 📁 폴더 구조
 
 ```text
