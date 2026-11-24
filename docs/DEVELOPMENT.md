@@ -2,7 +2,7 @@
 
 ## DB 준비
 
-저장소 루트에서 `.env.example`을 `.env`로 복사한 후 `docker compose up -d`를 실행합니다. 예시 비밀번호는 개인 PC의 로컬 개발에만 사용하고 실제 비밀번호는 Git에 올리지 않습니다. 변경한 비밀번호는 기존 MySQL 볼륨에 자동 적용되지 않습니다.
+저장소 루트에서 `.env.example`을 `.env`로 복사한 후 `DB_PASSWORD`와 `MYSQL_ROOT_PASSWORD`를 각자 설정하고 `docker compose up -d`를 실행합니다. `.env`는 Git에 올리지 않습니다. 두 값은 다르게 설정하고 영문자·숫자로만 구성합니다. 변경한 비밀번호는 기존 MySQL 볼륨에 자동 적용되지 않습니다.
 
 처음 생성한 빈 MySQL 볼륨에는 `schema.sql`, `demo-data.sql`, `course_catalog.sql`이 자동으로 순서대로 적용됩니다. 기존 볼륨에는 적용되지 않으며 자동 마이그레이션은 지원하지 않습니다. 데이터가 있는 볼륨을 삭제하지 마세요. 기존 개발 DB에 강좌 목록을 추가하려면:
 
@@ -14,15 +14,11 @@ docker compose exec -T mysql sh -c 'mysql --default-character-set=utf8mb4 -u"$MY
 
 ## 서버 실행
 
-Compose의 `.env`는 Spring에 자동으로 전달되지 않습니다. **각 터미널**에서 DB 비밀번호를 `.env`와 동일하게 설정합니다.
+백엔드에서 저장소 루트의 `.env`를 읽습니다.
 
 ```powershell
-$env:DB_URL='jdbc:mysql://localhost:3307/attendance?serverTimezone=Asia/Seoul&characterEncoding=UTF-8'
-$env:DB_USERNAME='attendance'
-$env:DB_PASSWORD='change-this-local-password'
-$env:SPRING_PROFILES_ACTIVE='dev'
 cd backend
-mvn spring-boot:run
+mvn spring-boot:run "-Dspring-boot.run.profiles=dev"
 ```
 
 ## API
