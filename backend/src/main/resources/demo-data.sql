@@ -10,4 +10,4 @@ INSERT INTO course_offerings (course_id,academic_year,term_code,section_code,ins
 INSERT INTO schedule_slots (offering_id,weekday,start_time,end_time,room)
  SELECT offering_id,1,'15:00:00','16:40:00','지혜307' FROM course_offerings;
 INSERT INTO enrollments (user_id,offering_id)
- SELECT u.user_id,o.offering_id FROM users u CROSS JOIN course_offerings o WHERE u.student_no IN ('DEMO001','DEMO002','DEMO003','DEMO004');
+ SELECT u.user_id,o.offering_id FROM users u CROSS JOIN course_offerings o WHERE u.student_no = 'DEMO001';

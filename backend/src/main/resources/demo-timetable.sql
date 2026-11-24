@@ -27,5 +27,9 @@ INSERT IGNORE INTO enrollments (user_id, offering_id)
 SELECT u.user_id, o.offering_id
 FROM users u JOIN course_offerings o ON o.academic_year = 2026 AND o.term_code = '2' AND o.section_code = '01'
 JOIN courses c ON c.course_id = o.course_id
-WHERE u.student_no IN ('DEMO001','DEMO002','DEMO003','DEMO004') AND u.role = 'STUDENT'
-  AND c.course_code IN ('03671','03674','09571','09613','09942');
+WHERE u.role = 'STUDENT' AND (
+    (u.student_no = 'DEMO001' AND c.course_code IN ('03671','03674','09613')) OR
+    (u.student_no = 'DEMO002' AND c.course_code IN ('03674','09571','09942')) OR
+    (u.student_no = 'DEMO003' AND c.course_code IN ('03671','09571','09613')) OR
+    (u.student_no = 'DEMO004' AND c.course_code IN ('03671','03674','09571'))
+);
