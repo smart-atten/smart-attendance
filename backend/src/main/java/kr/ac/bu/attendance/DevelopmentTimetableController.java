@@ -26,7 +26,7 @@ class DevelopmentTimetableController {
     Map<String, Object> student(@PathVariable String studentNo) {
         var users = db.queryForList("SELECT student_no, display_name FROM users WHERE student_no = ? AND role = 'STUDENT'", studentNo);
         if (users.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found");
-        return users.getFirst();
+        return users.get(0);
     }
 
     @GetMapping("/{studentNo}/timetable")
