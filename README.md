@@ -73,17 +73,29 @@ smart-attendance/
 └── package.json                  프런트엔드 스크립트와 의존성
 ```
 
-세부 실행 방법과 개발용 API는 [개발 환경 안내](docs/DEVELOPMENT.md)를 확인하세요.
+세부 구조는 [프런트엔드](src/README.md), [백엔드](backend/README.md), 실행 방법은 [개발 환경 안내](docs/DEVELOPMENT.md)를 확인하세요.
 
 | 영역 | 프런트엔드 | 백엔드 |
 |---|---|---|
-| 공통 · 홈 | `src/components/Navbar.jsx`, `src/pages/Home.jsx`, `src/domain/` | `ApiContracts.java`, `ApiErrors.java`, `EndpointSkeleton.java` |
-| 시간표 · 출결 | `src/pages/Timetable.jsx`, `src/pages/TimetablePage.jsx`, `src/domain/timetable*.js` | `DevelopmentTimetableController.java`, `EndpointSkeleton.java`의 시간표·출결 경로 |
-| Q&A · FAQ | `src/pages/QnA.jsx` | `EndpointSkeleton.java`의 게시글 경로 |
-| 공지 · 설정 · 더보기 | `src/pages/Notice.jsx`, `Settings.jsx`, `More.jsx` | `EndpointSkeleton.java`의 게시글·설정·알림 경로 |
+| 공통 · 홈 | `src/components/Navbar.jsx`, `src/pages/Home.jsx`, `src/domain/` | `ApiContracts.java`, `ApiErrors.java`, `StudentController.java`, `StudentService.java` |
+| 시간표 · 출결 | `src/pages/Timetable.jsx`, `src/pages/TimetablePage.jsx`, `src/domain/timetable*.js` | `DevelopmentTimetableController.java`, `TimetableController.java`, `TimetableService.java` |
+| Q&A · FAQ | `src/pages/QnA.jsx` | `PostController.java`, `PostService.java` |
+| 공지 · 설정 · 더보기 | `src/pages/Notice.jsx`, `Settings.jsx`, `More.jsx` | `PostController.java`, `StudentController.java`, `NotificationController.java` 및 각 서비스 |
 | 로그인 | `src/api/apiClient.js` | `backend/src/main/java/kr/ac/bu/attendance/auth/` |
 
-백엔드의 기능별 엔드포인트는 현재 `EndpointSkeleton.java`에 모인 미구현 뼈대입니다. 담당 기능을 구현할 때 기능별 컨트롤러와 서비스·저장소로 분리합니다.
+개발용 학생·시간표·출결 조회를 제외한 아래 API는 서비스에서 501을 반환하는 미구현 뼈대입니다. 로그인과 토큰 인증, 서비스의 DB 저장소 연결과 화면 연결은 담당 기능 구현 시 완성해야 합니다. 요청·응답 타입은 `ApiContracts.java`, 프론트 요청 함수는 `src/api/apiClient.js`에서 확인할 수 있습니다.
+
+| 담당 | API | 요청 및 응답 |
+|---|---|---|
+| 공통 · 홈 | `GET /api/me` | 학생 정보 `Student` |
+| 시간표 · 출결 | `GET /api/me/timetable?year=2026&term=2` | `Course` 목록 |
+| 시간표 · 출결 | `GET /api/me/attendance?offeringId=1` | 선택적 강좌 ID, `Attendance` 목록 |
+| 시간표 · 출결 | `POST /api/attendance/{sessionId}/check-in` | `CheckInResult` |
+| Q&A · FAQ / 공지 | `GET /api/posts`, `GET /api/posts/{postId}`, `POST /api/posts` | 목록 필터 `type`, `faq`, `query`; 작성 `CreatePostRequest`; 응답 `Post` |
+| 설정 · 알림 | `PATCH /api/me/settings`, `GET /api/notifications` | `SettingsRequest` → `Settings`; `Notification` 목록 |
+| 로그인 | `POST /api/auth/login` | 학번 `studentNo`, 비밀번호 `password` → 토큰 응답; 담당자 미정 |
+
+인증이 필요한 API의 프론트 요청 함수는 Bearer 토큰을 전달하도록 준비되어 있지만, 서버의 토큰 발급·검증은 아직 구현되지 않았습니다.
 
 ## 🧰 개발 환경 준비
 
@@ -96,6 +108,13 @@ smart-attendance/
 | MySQL | Docker 이미지 `mysql:8.0` 사용 | `docker compose ps` |
 
 명령은 Windows PowerShell 기준입니다. 각 팀원의 PC에서 저장소를 받은 뒤 저장소 폴더를 열고 실행합니다. Node.js는 React 개발 서버와 빌드에 필요하며, JDK와 Maven은 Spring Boot 서버에 필요합니다.
+
+Node.js는 [공식 다운로드](https://nodejs.org/)에서 24 계열을 설치합니다. Git Bash에서 저장소를 받을 때는 다음을 실행합니다.
+
+```bash
+git clone --branch develop https://github.com/smart-atten/smart-attendance.git
+cd smart-attendance
+```
 
 ## 🐳 로컬 DB 실행
 
@@ -151,6 +170,8 @@ mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
 또 다른 창에서 저장소 루트로 이동해 `npm ci` 후 `npm run dev`를 실행합니다.
+
+개발용 시간표는 기본적으로 `DEMO001`을 조회합니다. 별도의 로컬 학생 번호를 사용하려면 저장소 루트에 Git에 포함되지 않는 `.env.local`을 만들고 `VITE_DEV_STUDENT_NO=학생번호`를 입력한 뒤 프런트 서버를 다시 시작합니다. 이 값은 브라우저에 노출되므로 비밀번호나 비밀값을 넣지 마세요. 해당 학생과 수강 데이터는 각자의 로컬 DB에 별도로 있어야 합니다.
 
 ## 🌿 브랜치 운영
 
