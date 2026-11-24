@@ -10,7 +10,7 @@ export default function TimetablePage() {
   useEffect(() => {
     if (!import.meta.env.DEV) return;
     let active = true;
-    const studentNo = import.meta.env.VITE_DEV_STUDENT_NO || "DEMO001";
+    const studentNo = import.meta.env.VITE_DEV_STUDENT_NO || "20232656";
     Promise.all([getDemoStudent(studentNo), getDemoTimetable(studentNo, 2026, "2")])
       .then(([student, rows]) => {
         if (active) setResult({ state: "ready", student, courses: groupTimetableRows(rows) });

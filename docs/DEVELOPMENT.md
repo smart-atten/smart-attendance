@@ -14,7 +14,7 @@ for file in backend/src/main/resources/catalog/course_catalog_*.sql; do
 done
 ```
 
-가상 학생은 `DEMO001`~`DEMO004`입니다. 예시 강좌의 학기, 시간과 수강 관계는 임의의 값이며 로그인 계정이 아닙니다. `course_catalog_import`는 엑셀 원본 목록이며 수강 관계와 실제 시간표에 자동 반영되지 않습니다. 교시별 시각과 학사 일정은 별도로 정해야 합니다.
+학생 학번은 `20232656`, `20221149`, `20222267`, `20221883`입니다. 예시 강좌의 학기, 시간과 수강 관계는 임의의 값이며 로그인 계정이 아닙니다. `course_catalog_import`는 엑셀 원본 목록이며 수강 관계와 실제 시간표에 자동 반영되지 않습니다. 교시별 시각과 학사 일정은 별도로 정해야 합니다.
 
 ## 서버 실행
 
@@ -30,15 +30,15 @@ mvn spring-boot:run "-Dspring-boot.run.profiles=dev"
 | 경로 | 상태 |
 |---|---|
 | `POST /api/auth/login` | 501 미구현. 요청 `{ "studentNo": "...", "password": "..." }`, 성공 응답 예정 `{ "accessToken": "...", "tokenType": "Bearer", "expiresIn": 3600 }` (`expiresIn`은 초). |
-| `GET /api/dev/students/DEMO001/timetable?year=2026&term=2` | 개발용 DB 조회 예시. 인증이 없으므로 로컬 더미 데이터에만 사용합니다. 하나의 강좌에 시간 슬롯이 여럿이면 행도 여러 개입니다. |
+| `GET /api/dev/students/20232656/timetable?year=2026&term=2` | 개발용 DB 조회 예시. 인증이 없으므로 로컬 더미 데이터에만 사용합니다. 하나의 강좌에 시간 슬롯이 여럿이면 행도 여러 개입니다. |
 | `GET /api/me`, `/api/me/timetable`, `/api/me/attendance` | 501 미구현 |
 | `POST /api/attendance/{sessionId}/check-in` | 501 미구현 |
 | `GET /api/posts`, `GET /api/posts/{postId}`, `POST /api/posts` | 501 미구현 |
 | `GET /api/notifications`, `PATCH /api/me/settings` | 501 미구현 |
 
-`src/api/apiClient.js`는 공통 요청 함수입니다. 개발 모드의 시간표 화면은 가상 학생 `DEMO001`의 2026년 2학기 데이터를 조회해 강좌별 슬롯으로 변환합니다. 이 연결은 로그인 기능이 아닌 개발용 예시이며 프로덕션 빌드에서는 비활성화됩니다. 로그인, 권한, 출석 판정·저장, 게시글과 알림은 아직 구현하지 않았습니다.
+`src/api/apiClient.js`는 공통 요청 함수입니다. 개발 모드의 시간표 화면은 학생 `20232656`의 2026년 2학기 데이터를 조회해 강좌별 슬롯으로 변환합니다. 이 연결은 로그인 기능이 아닌 개발용 예시이며 프로덕션 빌드에서는 비활성화됩니다. 로그인, 권한, 출석 판정·저장, 게시글과 알림은 아직 구현하지 않았습니다.
 
-`PasswordService.hashPassword`, `matchesPassword`는 BCrypt로 학생 비밀번호를 해시하고 검증합니다. `users.password_hash`에 해시를 저장하며 가상 계정의 `UNUSABLE` 값은 로그인할 수 없는 자리 표시자입니다. MySQL 접속 비밀번호는 서버가 DB에 접속할 때 원본이 필요하므로 해시로 대체할 수 없으며 `.env`와 환경 변수로 관리합니다. 로그인 토큰 발급과 검증을 구현하기 전에는 `/api/me/timetable`이 501을 반환합니다. 인증 구현 시 `Authorization: Bearer <accessToken>`을 검증한 뒤 토큰의 사용자 ID로 본인 수강 정보만 조회해야 합니다.
+`PasswordService.hashPassword`, `matchesPassword`는 BCrypt로 학생 비밀번호를 해시하고 검증합니다. `users.password_hash`에 해시를 저장하며 테스트 계정의 `UNUSABLE` 값은 로그인할 수 없는 자리 표시자입니다. MySQL 접속 비밀번호는 서버가 DB에 접속할 때 원본이 필요하므로 해시로 대체할 수 없으며 `.env`와 환경 변수로 관리합니다. 로그인 토큰 발급과 검증을 구현하기 전에는 `/api/me/timetable`이 501을 반환합니다. 인증 구현 시 `Authorization: Bearer <accessToken>`을 검증한 뒤 토큰의 사용자 ID로 본인 수강 정보만 조회해야 합니다.
 
 실제 서비스 API의 요청·응답 필드는 `ApiContracts.java`의 camelCase를 따릅니다. 예를 들어 시간표는 `offeringId`, `courseCode`, `sectionCode`, `slots`를 반환하며 각 `slots`에 `weekday`, `startTime`, `endTime`, `room`을 담습니다. 게시글 작성은 `{ "postType": "QUESTION", "title": "...", "body": "...", "anonymous": false }`를 사용합니다. 설정 변경은 `{ "pushEnabled": true }`를 사용합니다. 개발용 시간표 API의 snake_case 응답은 별도이며 정식 API 계약과 다릅니다. 정식 경로는 모두 구현 전으로 501을 반환하고 인증 보호가 아직 적용되지 않았습니다.
 

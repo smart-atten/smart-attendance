@@ -63,6 +63,6 @@ App.jsx → TimetablePage.jsx → apiClient.js → 개발용 학생·시간표 A
                      timetableMapper.js → Timetable.jsx
 ```
 
-현재 시간표는 개발 모드에서 기본 가상 학번 `DEMO001`을 사용하며 `.env.local`의 `VITE_DEV_STUDENT_NO`로 변경할 수 있습니다. 로그인 사용자 정보와 정식 시간표 API는 미연결입니다. 나머지 페이지도 경로와 기본 화면 위주이며 세부 기능 구현이 필요합니다.
+현재 시간표는 개발 모드에서 기본 학번 `20232656`을 사용하며 `.env.local`의 `VITE_DEV_STUDENT_NO`로 변경할 수 있습니다. 로그인 사용자 정보와 정식 시간표 API는 미연결입니다. 나머지 페이지도 경로와 기본 화면 위주이며 세부 기능 구현이 필요합니다.
 
 로그인 구현 후에는 공통 API 함수에 토큰을 전달하고, 서버가 검증한 학생의 수강 강좌와 출결만 반환하도록 연결합니다. 개발용 API는 snake_case 행을, 정식 API 계약은 `ApiContracts.java`의 camelCase 구조를 사용하므로 연결 시 형식에 맞춰야 합니다.
