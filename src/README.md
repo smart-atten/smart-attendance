@@ -10,7 +10,7 @@ React 애플리케이션은 저장소 루트의 `src/`에 있습니다. 별도�
 | 시간표·출결조회 | 이은아 | `/timetable` | `pages/TimetablePage.jsx`, `pages/Timetable.jsx` |
 | Q&A·FAQ | 김건우 | `/qna` | `pages/QnA.jsx` |
 | 공지·환경설정·더보기 | 박지연 | `/notice`, `/settings`, `/more` | `pages/Notice.jsx`, `pages/Settings.jsx`, `pages/More.jsx` |
-| 로그인 | 유다연 | 경로 미정 | `api/apiClient.js`의 로그인 요청 함수만 존재 |
+| 로그인·인증 | 유다연 | `/login` | `pages/Login.jsx`, `auth/` |
 
 ## 현재 파일 트리
 
@@ -18,6 +18,11 @@ React 애플리케이션은 저장소 루트의 `src/`에 있습니다. 별도�
 📁 src/
 ├── 📁 api/
 │   └── 📄 apiClient.js — 공통 API 요청
+├── 📁 auth/
+│   ├── 📄 AuthProvider.jsx — 로그인 상태·JWT 보관 · 유다연
+│   ├── 📄 RequireAuth.jsx — 로그인 필요 경로 보호 · 유다연
+│   ├── 📄 token.js — 토큰 저장·만료 확인 · 유다연
+│   └── 📄 useAuth.js — 로그인 정보 훅 · 유다연
 ├── 📁 assets/
 │   ├── 📄 hero.png
 │   ├── 📄 react.svg
@@ -25,6 +30,7 @@ React 애플리케이션은 저장소 루트의 `src/`에 있습니다. 별도�
 ├── 📁 components/
 │   └── 📄 Navbar.jsx — 공통 메뉴 · 유다연
 ├── 📁 domain/
+│   ├── 📄 apiMappers.js — API 응답 → 도메인 규격 변환 · 유다연
 │   ├── 📄 attendance.js
 │   ├── 📄 post.js
 │   ├── 📄 timetable.js
@@ -33,6 +39,7 @@ React 애플리케이션은 저장소 루트의 `src/`에 있습니다. 별도�
 │   └── 📄 user.js
 ├── 📁 pages/
 │   ├── 📄 Home.jsx — 홈 · 유다연
+│   ├── 📄 Login.jsx — 로그인 · 유다연
 │   ├── 📄 More.jsx — 더보기 · 박지연
 │   ├── 📄 Notice.jsx — 공지 · 박지연
 │   ├── 📄 QnA.jsx — Q&A·FAQ · 김건우

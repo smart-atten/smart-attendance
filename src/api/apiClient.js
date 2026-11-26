@@ -13,7 +13,9 @@ export async function apiRequest(path, { headers, ...options } = {}) {
   if (!response.ok) {
     let message = `요청 실패 (${response.status})`
     try { message = (await response.json()).message || message } catch { /* non-JSON response */ }
-    throw new Error(message)
+    const error = new Error(message)
+    error.status = response.status
+    throw error
   }
   return response.status === 204 ? null : response.json()
 }
@@ -21,6 +23,10 @@ export async function apiRequest(path, { headers, ...options } = {}) {
 export function getDemoTimetable(studentNo, year, term) {
   const query = new URLSearchParams({ year: String(year), term })
   return apiRequest(`/api/dev/students/${encodeURIComponent(studentNo)}/timetable?${query}`)
+}
+
+export function getDemoAttendance(studentNo) {
+  return apiRequest(`/api/dev/students/${encodeURIComponent(studentNo)}/attendance`)
 }
 
 export function getDemoStudent(studentNo) {
