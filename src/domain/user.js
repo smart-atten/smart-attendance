@@ -1,6 +1,12 @@
 export const ROLE = /** @type {const} */ ({
   STUDENT: 'STUDENT',
+  ADMIN: 'ADMIN',
 })
+
+export const ROLE_LABELS = {
+  [ROLE.STUDENT]: '학생',
+  [ROLE.ADMIN]: '관리자',
+}
 
 /** @typedef {typeof ROLE[keyof typeof ROLE]} Role */
 
